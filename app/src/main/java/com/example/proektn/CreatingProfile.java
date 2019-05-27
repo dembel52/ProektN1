@@ -56,9 +56,12 @@ public class CreatingProfile extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Users users = new Users(text1.getText().toString(),text2.getText().toString(),userId,spinner.getSelectedItem().toString());
+                Users users = new Users(text1.getText().toString(),text2.getText().toString(),userId,spinner.getSelectedItem().toString(),R.drawable.ic_mood_black_24dp);
                 if(userId != null) {
-                    db.collection("Üsers").document(userId).set(users);
+                    db.collection("Users").document(userId).set(users);
+                    Intent intent = new Intent(CreatingProfile.this, ListOfDating.class);
+
+                    startActivity(intent);
                 }else{
                     Toast.makeText(CreatingProfile.this,"null",Toast.LENGTH_SHORT).show();
                 }

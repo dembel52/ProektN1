@@ -5,16 +5,25 @@ public class Users {
     private String voz;
     private String id;
     private String pol;
+    private int avatarMockUpResorse;
 
     public Users() {
-
     }
 
-    public Users(String name, String voz, String id, String pol) {
+    public Users(String name, String voz, String id, String pol, int avatarMockUpResorse) {
         this.name = name;
         this.voz = voz;
         this.id = id;
         this.pol = pol;
+        this.avatarMockUpResorse = avatarMockUpResorse;
+    }
+
+    public int getAvatarMockUpResorse() {
+        return avatarMockUpResorse;
+    }
+
+    public void setAvatarMockUpResorse(int avatarMockUpResorse) {
+        this.avatarMockUpResorse = avatarMockUpResorse;
     }
 
     public String getPol() {
