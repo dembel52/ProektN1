@@ -1,5 +1,6 @@
 package com.example.proektn;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,13 +55,13 @@ public class ListOfDating extends AppCompatActivity {
         capitalCities.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                Toast.makeText(ListOfDating.this,"onSoccess",Toast.LENGTH_SHORT).show();
+
                 if (!queryDocumentSnapshots.isEmpty()) {
-                    Toast.makeText(ListOfDating.this,"цикл",Toast.LENGTH_SHORT).show();
+
                     for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments() ) {
 
                         Users users=document.toObject(Users.class);
-                        Toast.makeText(ListOfDating.this,"цикл1",Toast.LENGTH_SHORT).show();
+
 
                         usersArrayList.add(users);
                         userAdapter.notifyDataSetChanged();
@@ -86,5 +87,16 @@ public class ListOfDating extends AppCompatActivity {
 
         userRecyclerView.setLayoutManager(userLayoutManager);
         userRecyclerView.setAdapter(userAdapter);
+
+        userAdapter.setOnUserClickListener(new UserAdapter.OnUserClickListener() {
+            @Override
+            public void onUserClick(int position) {
+                Toast.makeText(ListOfDating.this,usersArrayList.get(0).getAvatarUserUrl(),Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ListOfDating.this, ProfileUser.class);
+                intent.putExtra("UserId",usersArrayList.get(position).getId());
+
+                startActivity(intent);
+            }
+        });
     }
 }

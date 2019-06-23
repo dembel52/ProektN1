@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,8 @@ public class Accountancy extends AppCompatActivity {
     private EditText text2;
     private Button button;
     private Button button2;
+    private TextView TextV;
+    private TextView TextV2;
     private String mVerificationId;
 
     private PhoneAuthProvider.ForceResendingToken mResendToken;
@@ -43,6 +46,9 @@ public class Accountancy extends AppCompatActivity {
         text2 = findViewById(R.id.editText2);
         button = findViewById(R.id.button);
         button2 = findViewById(R.id.button2);
+        TextV = findViewById(R.id.textView);
+        TextV2 = findViewById(R.id.textView4);
+
         verificvation();
 
         auth = FirebaseAuth.getInstance();
@@ -50,7 +56,17 @@ public class Accountancy extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 loginUser();
+
+                text1.setVisibility(View.GONE);
+                TextV.setVisibility(View.GONE);
+                button.setVisibility(View.GONE);
+
+                text2.setVisibility(View.VISIBLE);
+                TextV2.setVisibility(View.VISIBLE);
+                button2.setVisibility(View.VISIBLE);
+
             }
         });
         button2.setOnClickListener(new View.OnClickListener() {

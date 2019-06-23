@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListOfDating"></activity>
+        <activity android:name=".ProfileUser"></activity>
+        <activity android:name=".ListOfDating" />
         <activity android:name=".CreatingProfile" />
         <activity android:name=".Accountancy">
             <intent-filter>
