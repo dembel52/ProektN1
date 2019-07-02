@@ -40,7 +40,6 @@ public class ListOfDating extends AppCompatActivity {
 
         usersArrayList = new ArrayList<>();
         
-
         attachUserDatabaseReferenceListener();
 
         buildRecyclerView();
