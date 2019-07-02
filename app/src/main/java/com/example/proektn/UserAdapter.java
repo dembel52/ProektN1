@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.firestore.auth.User;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -40,8 +40,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder userViewHolder, int i) {
         Users currentUser = users.get(i);
-        userViewHolder.avatarImageView.setImageResource(currentUser.getAvatarMockUpResorse());
-        userViewHolder.userNameTextView.setText(currentUser.getName());
+
+        Glide.with(userViewHolder.avatarImageView.getContext())
+                .load(currentUser.getAvatarUserUrl())
+                .into(userViewHolder.avatarImageView);
+
+        userViewHolder.userNameTextView.setText(currentUser.getName()+" 30");
 
     }
 
@@ -70,6 +74,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                         }
 
                     }
+
                 }
             });
         }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,8 @@ public class Accountancy extends AppCompatActivity {
     private EditText text2;
     private Button button;
     private Button button2;
+    private TextView textV;
+    private TextView textV2;
     private String mVerificationId;
 
     private PhoneAuthProvider.ForceResendingToken mResendToken;
@@ -39,10 +42,15 @@ public class Accountancy extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accountancy);
 
+
+
         text1 = findViewById(R.id.editText1);
         text2 = findViewById(R.id.editText2);
         button = findViewById(R.id.button);
         button2 = findViewById(R.id.button2);
+        textV = findViewById(R.id.textView);
+        textV2 = findViewById(R.id.textView4);
+
         verificvation();
 
         auth = FirebaseAuth.getInstance();
@@ -50,12 +58,24 @@ public class Accountancy extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 loginUser();
+
+                text1.setVisibility(View.GONE);
+                textV.setVisibility(View.GONE);
+                button.setVisibility(View.GONE);
+
+                text2.setVisibility(View.VISIBLE);
+                textV2.setVisibility(View.VISIBLE);
+                button2.setVisibility(View.VISIBLE);
+
             }
         });
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(Accountancy.this,mVerificationId,Toast.LENGTH_SHORT).show();
+                Toast.makeText(Accountancy.this,text2.getText().toString(),Toast.LENGTH_SHORT).show();
                 PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, text2.getText().toString());
                 // [END verify_with_code]
                 signInWithPhoneAuthCredential(credential);
