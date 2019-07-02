@@ -39,8 +39,7 @@ public class ListOfDating extends AppCompatActivity {
         setContentView(R.layout.activity_list_of_dating);
 
         usersArrayList = new ArrayList<>();
-
-
+        
 
         attachUserDatabaseReferenceListener();
 
