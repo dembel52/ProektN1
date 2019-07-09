@@ -1,9 +1,7 @@
 package com.example.proektn;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Intent;
-import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -11,10 +9,14 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,8 +33,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
+
 public class CreatingProfile extends AppCompatActivity {
-    private EditText text1;
 
     private static final int RC_IMAGE_PICKER = 123;
 
@@ -41,11 +44,18 @@ public class CreatingProfile extends AppCompatActivity {
     StorageReference imageReference;
     Uri selectedImageUrl;
     Uri downloadUri;
-
+    UploadTask uploadTask;
+    private EditText nameUser;
     private Button button;
     private Button button1;
-    private Spinner spinner;
-
+    private Spinner spinnerSemPolo;
+    private Spinner spinnerCelZnskom;
+    private RadioGroup polUser;
+    private RadioGroup radioGroupDeti;
+    private RadioGroup radioGrypPolZnackom;
+    private String userPol;
+    private String userDeti;
+    private String userPolZnackom;
 
     int myYear = 1990;
     int myMonth = 01;
@@ -57,18 +67,8 @@ public class CreatingProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creating_profile);
 
-        storage = FirebaseStorage.getInstance();
-        userImageStorageReferense = storage.getReference().child("user_img");
-
-        spinner = findViewById(R.id.spinner);
-        text1 = findViewById(R.id.editText);
-
-        button = findViewById(R.id.button3);
-        button1 = findViewById(R.id.button4);
-
-        //button.setEnabled(false);
-
-        tvDate = findViewById(R.id.tvDate);
+        initilizetion();
+        radioButtonGryp();
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -95,14 +95,17 @@ public class CreatingProfile extends AppCompatActivity {
             }
         });
 
-
-        //if(downloadUri!=null){button.setEnabled(true);}
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //imgStorage();
-                Users users = new Users(text1.getText().toString(),(myYear+1),myMonth,myDay,userId,spinner.getSelectedItem().toString(),R.drawable.ic_mood_black_24dp,downloadUri.toString());
+
+                Users users = new Users(nameUser.getText().toString(),(myYear+1),myMonth,myDay,userId,userPol,downloadUri+"",
+                        userDeti,userPolZnackom,spinnerSemPolo.getSelectedItem().toString(),spinnerCelZnskom.getSelectedItem().toString());
+                ArrayList list = new ArrayList();
+                list.add("https://firebasestorage.googleapis.com/v0/b/proectn-c7134.appspot.com/o/user_img%2Fimage%3A3893?alt=media&token=ef73c55d-64e3-466e-8ec5-cf3465cb15c2");
+                list.add("https://firebasestorage.googleapis.com/v0/b/proectn-c7134.appspot.com/o/user_img%2Fimage%3A3893?alt=media&token=ef73c55d-64e3-466e-8ec5-cf3465cb15c2");
+                list.add("https://firebasestorage.googleapis.com/v0/b/proectn-c7134.appspot.com/o/user_img%2Fimage%3A3893?alt=media&token=ef73c55d-64e3-466e-8ec5-cf3465cb15c2");
+                users.setListPhotoUri(list);
                 //users.setAvatarUserUrl(downloadUri);
                 Toast.makeText(CreatingProfile.this,"users",Toast.LENGTH_SHORT).show();
                 if(userId != null) {
@@ -114,8 +117,68 @@ public class CreatingProfile extends AppCompatActivity {
                     Toast.makeText(CreatingProfile.this,"null",Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+    }
 
+    private void initilizetion() {
+        storage = FirebaseStorage.getInstance();
+        userImageStorageReferense = storage.getReference().child("user_img");
 
+        spinnerSemPolo = findViewById(R.id.spinnerSemPolo);
+        spinnerCelZnskom = findViewById(R.id.spinnerCelZnskom);
+
+        nameUser = findViewById(R.id.editTextNameUser);
+
+        button = findViewById(R.id.buttonSaveProfilUser);
+        button1 = findViewById(R.id.button4);
+
+        polUser = findViewById(R.id.radioGrypPol);
+        radioGroupDeti = findViewById(R.id.radioGrypDeti);
+        radioGrypPolZnackom = findViewById(R.id.radioGrypPolZnackom);
+        tvDate = findViewById(R.id.dataUser);
+    }
+
+    private void radioButtonGryp() {
+        polUser.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case -1: userPol=null;
+                        break;
+                    case R.id.polManUser: userPol="Мужской";
+                        break;
+                    case R.id.polGerlUser: userPol="Женский";
+                        break;
+                }
+            }
+        });
+
+        radioGroupDeti.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case -1: userDeti=null;
+                        break;
+                    case R.id.radioButtonDa: userDeti="Да";
+                        break;
+                    case R.id.radioButtonNo: userDeti="Нет";
+                        break;
+                }
+            }
+        });
+
+        radioGrypPolZnackom.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case -1: userPolZnackom=null;
+                        break;
+                    case R.id.radioButtonManUser: userPolZnackom="Мужчиной";
+                        break;
+                    case R.id.radioButtonGerlUser: userPolZnackom="Женщиной";
+                        break;
+                }
             }
         });
     }
@@ -149,7 +212,7 @@ public class CreatingProfile extends AppCompatActivity {
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         startActivityForResult(Intent.createChooser(intent,"выберете фото"),RC_IMAGE_PICKER);
-        //imgStorage();
+
     }
 
     @Override
@@ -162,8 +225,6 @@ public class CreatingProfile extends AppCompatActivity {
         }
     }
     public void imgStorage(){
-        UploadTask uploadTask = imageReference.putFile(selectedImageUrl);
-
 
         uploadTask = imageReference.putFile(selectedImageUrl);
 
@@ -188,10 +249,31 @@ public class CreatingProfile extends AppCompatActivity {
                     Toast.makeText(CreatingProfile.this,"ne null",Toast.LENGTH_SHORT).show();
                 } else {
                     // Handle failures
-                    Toast.makeText(CreatingProfile.this,"ne null1",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreatingProfile.this,"n null",Toast.LENGTH_SHORT).show();
                     // ...
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.out:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(CreatingProfile.this,Accountancy.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
     }
 }
