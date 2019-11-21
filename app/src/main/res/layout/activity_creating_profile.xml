@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:scrollbars="vertical"
     android:layout_height="match_parent"
-    tools:context=".CreatingProfile">
+    tools:context=".Screens.CreatingProfile.CreatingProfile">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,52 +81,27 @@
             android:text="Пол" />
 
         <RadioGroup
-            android:id="@+id/radioGrypPol"
+            android:id="@+id/radioGrypPolPoisk"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
 
             <RadioButton
-                android:id="@+id/polManUser"
+                android:id="@+id/polManPoisk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Мужской" />
 
             <RadioButton
-                android:id="@+id/polGerlUser"
+                android:id="@+id/polGerlPoisk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Женский" />
         </RadioGroup>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="Выход" />
-
-        <Button
-            android:id="@+id/buttonSaveProfilUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:enabled="false"
-            android:text="Сохранить" />
     </LinearLayout>
 
     <LinearLayout
@@ -166,8 +141,8 @@
             android:id="@+id/radioGrypDeti"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/radioButtonDa"
@@ -213,7 +188,7 @@
                 android:text="мужчиной" />
 
             <RadioButton
-                android:id="@+id/radioButtonGerl"
+                android:id="@+id/radioButtonGerlUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -232,12 +207,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="В возрасте" />
+            android:text="В возрасте от" />
 
-        <SeekBar
-            android:id="@+id/seekBar"
+        <Spinner
+            android:id="@+id/spinnerVozrostOt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:entries="@array/vozrast"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="до" />
+
+        <Spinner
+            android:id="@+id/spinnerVozrostDo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/vozrast"
             android:layout_weight="1" />
 
 
@@ -262,6 +252,22 @@
             android:entries="@array/cel_znskomstva"
             android:layout_weight="1" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonSaveProfilUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:enabled="false"
+            android:text="Сохранить" />
     </LinearLayout>
 
 

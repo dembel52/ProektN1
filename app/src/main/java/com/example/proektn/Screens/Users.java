@@ -1,6 +1,7 @@
-package com.example.proektn;
+package com.example.proektn.Screens;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Users {
     private String name;
@@ -15,14 +16,17 @@ public class Users {
     private String celZnackom;
     private int avatarMockUpResorse;
     private String avatarUserUrl;
-    private ArrayList listPhotoUri;
+    private int vozrostOt;
+    private int vozrostDo;
+    private long mikroVozrast;
 
     public Users() {
     }
 
     public Users(String name, int myYear, int myMonth, int myDay,
                  String id, String pol, String avatarUserUrl,
-                 String userDeti, String userPolZnackom, String semPolo, String celZnackom) {
+                 String userDeti, String userPolZnackom, String semPolo, String celZnackom,
+                 int vozrostOt, int vozrostDo, long mikroVozrast) {
         this.name = name;
         this.myYear = myYear;
         this.myMonth = myMonth;
@@ -33,8 +37,19 @@ public class Users {
         this.userPolZnackom = userPolZnackom;
         this.semPolo = semPolo;
         this.celZnackom = celZnackom;
+        this.vozrostOt = vozrostOt;
+        this.vozrostDo = vozrostDo;
+        this.mikroVozrast = mikroVozrast;
 
         this.avatarUserUrl = avatarUserUrl;
+    }
+
+    public long getMikroVozrast() {
+        return mikroVozrast;
+    }
+
+    public void setMikroVozrast(long mikroVozrast) {
+        this.mikroVozrast = mikroVozrast;
     }
 
     public String getUserDeti() {
@@ -69,12 +84,21 @@ public class Users {
         this.celZnackom = celZnackom;
     }
 
-    public ArrayList getListPhotoUri() {
-        return listPhotoUri;
+
+    public int getVozrostOt() {
+        return vozrostOt;
     }
 
-    public void setListPhotoUri(ArrayList listPhotoUri) {
-        this.listPhotoUri = listPhotoUri;
+    public void setVozrostOt(int vozrostOt) {
+        this.vozrostOt = vozrostOt;
+    }
+
+    public int getVozrostDo() {
+        return vozrostDo;
+    }
+
+    public void setVozrostDo(int vozrostDo) {
+        this.vozrostDo = vozrostDo;
     }
 
     public int getAvatarMockUpResorse() {

@@ -1,10 +1,11 @@
-package com.example.proektn;
+package com.example.proektn.Screens.CreatingProfile;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
+
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -21,21 +22,19 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.example.proektn.Screens.Poisk.Poisk;
+import com.example.proektn.R;
+import com.example.proektn.Screens.Accountancy.Accountancy;
+import com.example.proektn.Screens.Users;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.util.Date;
 
-public class CreatingProfile extends AppCompatActivity {
+public class CreatingProfile extends  AppCompatActivity implements CreatingProfileView{
 
     private static final int RC_IMAGE_PICKER = 123;
 
@@ -47,15 +46,22 @@ public class CreatingProfile extends AppCompatActivity {
     UploadTask uploadTask;
     private EditText nameUser;
     private Button button;
-    private Button button1;
     private Spinner spinnerSemPolo;
     private Spinner spinnerCelZnskom;
+    private Spinner spinnerVozrostOt;
+    private Spinner spinnerVozrostDo;
     private RadioGroup polUser;
     private RadioGroup radioGroupDeti;
     private RadioGroup radioGrypPolZnackom;
     private String userPol;
     private String userDeti;
     private String userPolZnackom;
+    long millis;
+
+    private CreatingProfilePresenter presenter;
+
+    private int vozrostOt;
+    private int vozrostDo;
 
     int myYear = 1990;
     int myMonth = 01;
@@ -70,48 +76,37 @@ public class CreatingProfile extends AppCompatActivity {
         initilizetion();
         radioButtonGryp();
 
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        Intent intent=getIntent();
+        Intent intent = getIntent();
         final String userId = intent.getStringExtra("id");
 
-        DocumentReference docRef = db.collection("Users").document(userId);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Users users = documentSnapshot.toObject(Users.class);
-                if(users.getName()!=null){
-                    Intent intent = new Intent(CreatingProfile.this, ListOfDating.class);
-
-                    startActivity(intent);
-                }
-            }
-        });
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-
-            }
-        });
+        presenter.loadData(userId);
 
         button.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
+                vozrostOt = Integer.parseInt(spinnerVozrostOt.getSelectedItem().toString());
+                vozrostDo = Integer.parseInt(spinnerVozrostDo.getSelectedItem().toString());
+
+                SimpleDateFormat formatter = new SimpleDateFormat("dd MM yyyy");//задаю формат даты
+                String dateInString = myDay+" "+myMonth+" "+myYear;// "29 11 2015";//создаю строку по заданному формату
+                try {
+                    Date date = formatter.parse(dateInString);//создаю дату через
+                     millis = date.getTime();
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
                 Users users = new Users(nameUser.getText().toString(),(myYear+1),myMonth,myDay,userId,userPol,downloadUri+"",
-                        userDeti,userPolZnackom,spinnerSemPolo.getSelectedItem().toString(),spinnerCelZnskom.getSelectedItem().toString());
-                ArrayList list = new ArrayList();
-                list.add("https://firebasestorage.googleapis.com/v0/b/proectn-c7134.appspot.com/o/user_img%2Fimage%3A3893?alt=media&token=ef73c55d-64e3-466e-8ec5-cf3465cb15c2");
-                list.add("https://firebasestorage.googleapis.com/v0/b/proectn-c7134.appspot.com/o/user_img%2Fimage%3A3893?alt=media&token=ef73c55d-64e3-466e-8ec5-cf3465cb15c2");
-                list.add("https://firebasestorage.googleapis.com/v0/b/proectn-c7134.appspot.com/o/user_img%2Fimage%3A3893?alt=media&token=ef73c55d-64e3-466e-8ec5-cf3465cb15c2");
-                users.setListPhotoUri(list);
-                //users.setAvatarUserUrl(downloadUri);
+                        userDeti,userPolZnackom,spinnerSemPolo.getSelectedItem().toString(),
+                        spinnerCelZnskom.getSelectedItem().toString(), vozrostOt, vozrostDo, millis);
+
                 Toast.makeText(CreatingProfile.this,"users",Toast.LENGTH_SHORT).show();
                 if(userId != null) {
-                    db.collection("Users").document(userId).set(users);
-                    Intent intent = new Intent(CreatingProfile.this, ListOfDating.class);
+                    presenter.saveData(userId, users);
 
+                    Intent intent = new Intent(CreatingProfile.this, Poisk.class);
                     startActivity(intent);
                 }else{
                     Toast.makeText(CreatingProfile.this,"null",Toast.LENGTH_SHORT).show();
@@ -119,7 +114,38 @@ public class CreatingProfile extends AppCompatActivity {
 
             }
         });
+
     }
+    @Override
+    public void showData(Users users) {
+        if(users.getName()!=null){
+            Intent intent = new Intent(CreatingProfile.this, Poisk.class);
+
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void showImage(Uri downloadUri) {
+        this.downloadUri = downloadUri;
+
+        proverka();
+        Toast.makeText(CreatingProfile.this,"ne null",Toast.LENGTH_SHORT).show();
+    }
+
+    private void proverka(){
+        Toast.makeText(CreatingProfile.this,"proverka",Toast.LENGTH_SHORT).show();
+        vozrostOt = Integer.parseInt(spinnerVozrostOt.getSelectedItem().toString());
+        vozrostDo = Integer.parseInt(spinnerVozrostDo.getSelectedItem().toString());
+
+        if(nameUser.getText().length() >= 2 && userPol!=null && userDeti!=null && userPolZnackom!=null && downloadUri!=null && vozrostOt <= vozrostDo) {
+            Toast.makeText(CreatingProfile.this,"proverka1",Toast.LENGTH_SHORT).show();
+            button.setEnabled(true);
+
+        }
+
+    }
+
 
     private void initilizetion() {
         storage = FirebaseStorage.getInstance();
@@ -127,30 +153,40 @@ public class CreatingProfile extends AppCompatActivity {
 
         spinnerSemPolo = findViewById(R.id.spinnerSemPolo);
         spinnerCelZnskom = findViewById(R.id.spinnerCelZnskom);
+        spinnerVozrostOt = findViewById(R.id.spinnerVozrostOt);
+        spinnerVozrostDo = findViewById(R.id.spinnerVozrostDo);
 
         nameUser = findViewById(R.id.editTextNameUser);
 
         button = findViewById(R.id.buttonSaveProfilUser);
-        button1 = findViewById(R.id.button4);
 
-        polUser = findViewById(R.id.radioGrypPol);
+        polUser = findViewById(R.id.radioGrypPolPoisk);
         radioGroupDeti = findViewById(R.id.radioGrypDeti);
         radioGrypPolZnackom = findViewById(R.id.radioGrypPolZnackom);
         tvDate = findViewById(R.id.dataUser);
+
+        presenter = new CreatingProfilePresenter(this);
     }
 
     private void radioButtonGryp() {
         polUser.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+
                 switch (checkedId){
                     case -1: userPol=null;
+
                         break;
-                    case R.id.polManUser: userPol="Мужской";
+                    case R.id.polManPoisk: userPol="Мужской";
+
                         break;
-                    case R.id.polGerlUser: userPol="Женский";
+                    case R.id.polGerlPoisk: userPol="Женский";
+                        break;
+                    default:
                         break;
                 }
+
+                proverka();
             }
         });
 
@@ -161,10 +197,12 @@ public class CreatingProfile extends AppCompatActivity {
                     case -1: userDeti=null;
                         break;
                     case R.id.radioButtonDa: userDeti="Да";
+                        Toast.makeText(CreatingProfile.this,"deti",Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.radioButtonNo: userDeti="Нет";
                         break;
                 }
+                proverka();
             }
         });
 
@@ -179,10 +217,12 @@ public class CreatingProfile extends AppCompatActivity {
                     case R.id.radioButtonGerlUser: userPolZnackom="Женщиной";
                         break;
                 }
+                proverka();
             }
         });
-    }
 
+    }
+// дата рождения
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onclick(View view) {
         // получаем текущую дату
@@ -206,7 +246,9 @@ public class CreatingProfile extends AppCompatActivity {
                 }, myYear, myMonth, myDay);
         datePickerDialog.show();
     }
+    //Дата рождения
 
+//  Загрузка фото
     public void onclickimg(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -221,40 +263,14 @@ public class CreatingProfile extends AppCompatActivity {
         if(requestCode == RC_IMAGE_PICKER && resultCode == RESULT_OK){
             selectedImageUrl = data.getData();
             imageReference = userImageStorageReferense.child(selectedImageUrl.getLastPathSegment());
-            imgStorage();
+            uploadTask = imageReference.putFile(selectedImageUrl);
+            presenter.saveImage( imageReference, uploadTask);
         }
     }
-    public void imgStorage(){
 
-        uploadTask = imageReference.putFile(selectedImageUrl);
+// Загрузка фото
 
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    Toast.makeText(CreatingProfile.this,"null1",Toast.LENGTH_SHORT).show();
-                    throw task.getException();
-
-                }
-                Toast.makeText(CreatingProfile.this,"null",Toast.LENGTH_SHORT).show();
-                // Continue with the task to get the download URL
-                return imageReference.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    downloadUri = task.getResult();
-                    if(downloadUri!=null){button.setEnabled(true);}
-                    Toast.makeText(CreatingProfile.this,"ne null",Toast.LENGTH_SHORT).show();
-                } else {
-                    // Handle failures
-                    Toast.makeText(CreatingProfile.this,"n null",Toast.LENGTH_SHORT).show();
-                    // ...
-                }
-            }
-        });
-    }
+    //  Меню
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -268,7 +284,7 @@ public class CreatingProfile extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.out:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(CreatingProfile.this,Accountancy.class));
+                startActivity(new Intent(CreatingProfile.this, Accountancy.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -276,4 +292,6 @@ public class CreatingProfile extends AppCompatActivity {
         }
 
     }
+
+    //  Меню
 }

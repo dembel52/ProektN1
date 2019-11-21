@@ -1,4 +1,4 @@
-package com.example.proektn;
+package com.example.proektn.Adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,13 +9,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.proektn.R;
+import com.example.proektn.Screens.Users;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
+public class ListOfDatingUserAdapter extends RecyclerView.Adapter<ListOfDatingUserAdapter.UserViewHolder> {
 
     private ArrayList<Users> users;
     private OnUserClickListener listener;
+
+    int myYear = 1990;
+    int myMonth = 01;
+    int myDay = 01;
 
     public interface OnUserClickListener{
         void onUserClick(int position);
@@ -25,7 +32,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         this.listener = listener;
     }
 
-    public UserAdapter(ArrayList<Users> users){
+    public ListOfDatingUserAdapter(ArrayList<Users> users){
+        this.users = users;
+    }
+
+    public void setUsers(ArrayList<Users> users) {
         this.users = users;
     }
 
@@ -45,7 +56,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 .load(currentUser.getAvatarUserUrl())
                 .into(userViewHolder.avatarImageView);
 
-        userViewHolder.userNameTextView.setText(currentUser.getName()+" 30");
+
+        final Calendar cal = Calendar.getInstance();
+        myYear = cal.get(Calendar.YEAR);
+        myMonth = cal.get(Calendar.MONTH);
+        myDay = cal.get(Calendar.DAY_OF_MONTH);
+
+        userViewHolder.userNameTextView.setText(currentUser.getName()+" "+(myYear-currentUser.getMyYear()));
 
     }
 

@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ProfileUser"></activity>
-        <activity android:name=".ListOfDating" />
-        <activity android:name=".CreatingProfile" />
-        <activity android:name=".Accountancy">
+        <activity android:name=".Screens.Poisk.Poisk"></activity>
+        <activity android:name=".Screens.ProfileUser.ProfileUser" />
+        <activity android:name=".Screens.ListOfDating.ListOfDating" />
+        <activity android:name=".Screens.CreatingProfile.CreatingProfile" />
+        <activity android:name=".Screens.Accountancy.Accountancy">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -35,8 +35,7 @@ public class ProfileUser extends AppCompatActivity implements ProfileUserView{
         Intent intent = getIntent();
         final String userId = intent.getStringExtra("UserId");
         presenter.loadData(userId);
-
-
+        
         ArrayList list = new ArrayList();
         list.add("https://firebasestorage.googleapis.com/v0/b/proectn-c7134.appspot.com/o/user_img%2Fimage%3A3893?alt=media&token=ef73c55d-64e3-466e-8ec5-cf3465cb15c2");
         list.add("https://firebasestorage.googleapis.com/v0/b/proectn-c7134.appspot.com/o/user_img%2Fimage%3A3932?alt=media&token=c9656806-c19b-42d5-8589-ddf295ba3351");

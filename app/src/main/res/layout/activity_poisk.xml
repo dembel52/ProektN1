@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Screens.Poisk.Poisk">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textNameCelZnak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Цель знакомства" />
+
+        <Spinner
+            android:id="@+id/spinnerCelZnskom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/cel_znskomstva" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinnerPoiskVozrastOt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:entries="@array/vozrast"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinnerPoiskVozrastDo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/vozrast"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textNamePolUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Пол" />
+
+        <RadioGroup
+            android:id="@+id/radioGrypPolPoisk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <RadioButton
+                android:id="@+id/polManPoisk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Мужской" />
+
+            <RadioButton
+                android:id="@+id/polGerlPoisk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Женский" />
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/buttonPoisk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Поиск" />
+    </LinearLayout>
+</LinearLayout>

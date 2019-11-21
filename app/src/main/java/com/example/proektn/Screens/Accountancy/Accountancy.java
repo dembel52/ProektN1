@@ -1,4 +1,4 @@
-package com.example.proektn;
+package com.example.proektn.Screens.Accountancy;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.proektn.Screens.CreatingProfile.CreatingProfile;
+import com.example.proektn.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -48,7 +50,7 @@ public class Accountancy extends AppCompatActivity {
         text2 = findViewById(R.id.editText2);
         button = findViewById(R.id.button);
         button2 = findViewById(R.id.button2);
-        textV = findViewById(R.id.textView);
+        textV = findViewById(R.id.textNameUser);
         textV2 = findViewById(R.id.textView4);
 
         verificvation();
