@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.example.proektn.Screens.CreatingProfile.CreatingProfile;
 import com.example.proektn.R;
+import com.example.proektn.Screens.Poisk.Poisk;
+import com.example.proektn.Screens.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -25,7 +27,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
 
-public class Accountancy extends AppCompatActivity {
+public class Accountancy extends AppCompatActivity implements AccountancyView{
 
     private FirebaseAuth auth;
     private EditText text1;
@@ -38,6 +40,7 @@ public class Accountancy extends AppCompatActivity {
 
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    public AccountancyPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +56,12 @@ public class Accountancy extends AppCompatActivity {
         textV = findViewById(R.id.textNameUser);
         textV2 = findViewById(R.id.textView4);
 
+
         verificvation();
 
         auth = FirebaseAuth.getInstance();
+
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,13 +90,23 @@ public class Accountancy extends AppCompatActivity {
             }
         });
 
+
+
         if(auth.getCurrentUser() != null){
             Intent intent = new Intent(Accountancy.this, CreatingProfile.class);
             intent.putExtra("id",auth.getUid());
+
             startActivity(intent);
         }
     }
+    @Override
+    public void showData(Users users) {
+        if(users.getName()!=null){
+            Intent intent = new Intent(Accountancy.this, Poisk.class);
 
+            startActivity(intent);
+        }
+    }
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -179,5 +195,6 @@ public class Accountancy extends AppCompatActivity {
                 mCallbacks);        // OnVerificationStateChangedCallbacks
 
     }
+
 
 }

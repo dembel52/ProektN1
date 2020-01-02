@@ -22,6 +22,7 @@ public class ListOfDatingPresenter {
 
 
     public void loadData(String poiskPol, String celZnak, long poiskVoz, long poiskVoz1){
+
         Query capitalCities = db.collection("Users").whereEqualTo("pol", poiskPol)
 
                .whereGreaterThan("mikroVozrast", poiskVoz).whereLessThan("mikroVozrast", poiskVoz1)

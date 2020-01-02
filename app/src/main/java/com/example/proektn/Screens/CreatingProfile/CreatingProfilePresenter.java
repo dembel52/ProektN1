@@ -30,6 +30,7 @@ public class CreatingProfilePresenter {
 
     public void saveData(String userId, Users users){
         db.collection("Users").document(userId).set(users);
+
     }
 
     public void loadData(String userId){
@@ -42,6 +43,7 @@ public class CreatingProfilePresenter {
                 view.showData(users);
             }
         });
+
     }
 
     public void saveImage(final StorageReference imageReference, final UploadTask uploadTask){

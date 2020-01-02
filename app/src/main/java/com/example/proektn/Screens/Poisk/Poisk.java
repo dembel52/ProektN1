@@ -12,6 +12,8 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.example.proektn.R;
+import com.example.proektn.Screens.Acquaintance.Acquaintance;
+import com.example.proektn.Screens.CreatingProfile.CreatingProfile;
 import com.example.proektn.Screens.ListOfDating.ListOfDating;
 
 import java.text.ParseException;
@@ -72,7 +74,10 @@ public class Poisk extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(Poisk.this, Acquaintance.class);
 
+                startActivity(intent);
+/*
                 final Calendar cal = Calendar.getInstance();
                 myYear = cal.get(Calendar.YEAR);
                 myMonth = cal.get(Calendar.MONTH);
@@ -89,14 +94,7 @@ public class Poisk extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                String dateInString1 = myDay+" "+myMonth+" "+(myYear-Long.parseLong(spinnerPoiskOt.getSelectedItem().toString()));// "29 11 2015";//создаю строку по заданному формату
-                try {
-                    Date date = formatter.parse(dateInString1);//создаю дату через
-                    millis1 = date.getTime();
 
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
                 //Toast.makeText(Poisk.this,spinnerCelZnak.getSelectedItem().toString(),Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Poisk.this, ListOfDating.class);
                 intent.putExtra("poiskPol",poiskPol);
@@ -120,6 +118,7 @@ public class Poisk extends AppCompatActivity {
                     e.printStackTrace();
                 }
 */
+
 
             }
         });

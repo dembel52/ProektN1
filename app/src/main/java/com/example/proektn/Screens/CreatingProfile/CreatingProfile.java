@@ -17,11 +17,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.proektn.Screens.Poisk.Poisk;
 import com.example.proektn.R;
 import com.example.proektn.Screens.Accountancy.Accountancy;
@@ -47,7 +49,7 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
     private EditText nameUser;
     private Button button;
     private Spinner spinnerSemPolo;
-    private Spinner spinnerCelZnskom;
+    private Spinner spinnerCelZnakom;
     private Spinner spinnerVozrostOt;
     private Spinner spinnerVozrostDo;
     private RadioGroup polUser;
@@ -56,6 +58,8 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
     private String userPol;
     private String userDeti;
     private String userPolZnackom;
+
+    private ImageView imageViewPhoto;
     long millis;
 
     private CreatingProfilePresenter presenter;
@@ -64,8 +68,8 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
     private int vozrostDo;
 
     int myYear = 1990;
-    int myMonth = 01;
-    int myDay = 01;
+    int myMonth = 1;
+    int myDay = 1;
     TextView tvDate;
 
     @Override
@@ -74,7 +78,7 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
         setContentView(R.layout.activity_creating_profile);
 
         initilizetion();
-        radioButtonGryp();
+        radioButtonGrep();
 
         Intent intent = getIntent();
         final String userId = intent.getStringExtra("id");
@@ -100,7 +104,7 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
 
                 Users users = new Users(nameUser.getText().toString(),(myYear+1),myMonth,myDay,userId,userPol,downloadUri+"",
                         userDeti,userPolZnackom,spinnerSemPolo.getSelectedItem().toString(),
-                        spinnerCelZnskom.getSelectedItem().toString(), vozrostOt, vozrostDo, millis);
+                        spinnerCelZnakom.getSelectedItem().toString(), vozrostOt, vozrostDo, millis);
 
                 Toast.makeText(CreatingProfile.this,"users",Toast.LENGTH_SHORT).show();
                 if(userId != null) {
@@ -112,6 +116,15 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
                     Toast.makeText(CreatingProfile.this,"null",Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+        imageViewPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                startActivityForResult(Intent.createChooser(intent,"выберете фото"),RC_IMAGE_PICKER);
             }
         });
 
@@ -128,6 +141,10 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
     @Override
     public void showImage(Uri downloadUri) {
         this.downloadUri = downloadUri;
+
+        Glide.with(this)
+                .load(downloadUri)
+                .into(imageViewPhoto);
 
         proverka();
         Toast.makeText(CreatingProfile.this,"ne null",Toast.LENGTH_SHORT).show();
@@ -152,7 +169,7 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
         userImageStorageReferense = storage.getReference().child("user_img");
 
         spinnerSemPolo = findViewById(R.id.spinnerSemPolo);
-        spinnerCelZnskom = findViewById(R.id.spinnerCelZnskom);
+        spinnerCelZnakom = findViewById(R.id.spinnerCelZnskom);
         spinnerVozrostOt = findViewById(R.id.spinnerVozrostOt);
         spinnerVozrostDo = findViewById(R.id.spinnerVozrostDo);
 
@@ -165,10 +182,12 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
         radioGrypPolZnackom = findViewById(R.id.radioGrypPolZnackom);
         tvDate = findViewById(R.id.dataUser);
 
+        imageViewPhoto = findViewById(R.id.imageViewPhoto);
+
         presenter = new CreatingProfilePresenter(this);
     }
 
-    private void radioButtonGryp() {
+    private void radioButtonGrep() {
         polUser.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -249,18 +268,12 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
     //Дата рождения
 
 //  Загрузка фото
-    public void onclickimg(View view) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        startActivityForResult(Intent.createChooser(intent,"выберете фото"),RC_IMAGE_PICKER);
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RC_IMAGE_PICKER && resultCode == RESULT_OK){
+            assert data != null;
             selectedImageUrl = data.getData();
             imageReference = userImageStorageReferense.child(selectedImageUrl.getLastPathSegment());
             uploadTask = imageReference.putFile(selectedImageUrl);

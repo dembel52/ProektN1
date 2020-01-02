@@ -20,10 +20,6 @@ public class ListOfDatingUserAdapter extends RecyclerView.Adapter<ListOfDatingUs
     private ArrayList<Users> users;
     private OnUserClickListener listener;
 
-    int myYear = 1990;
-    int myMonth = 01;
-    int myDay = 01;
-
     public interface OnUserClickListener{
         void onUserClick(int position);
     }
@@ -44,13 +40,13 @@ public class ListOfDatingUserAdapter extends RecyclerView.Adapter<ListOfDatingUs
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.user_item,viewGroup,false);
-        UserViewHolder viewHolder = new UserViewHolder(view,listener);
-        return viewHolder;
+        return new UserViewHolder(view,listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder userViewHolder, int i) {
-        Users currentUser = users.get(i);
+        Users currentUser;
+        currentUser = users.get(i);
 
         Glide.with(userViewHolder.avatarImageView.getContext())
                 .load(currentUser.getAvatarUserUrl())
@@ -58,11 +54,11 @@ public class ListOfDatingUserAdapter extends RecyclerView.Adapter<ListOfDatingUs
 
 
         final Calendar cal = Calendar.getInstance();
-        myYear = cal.get(Calendar.YEAR);
-        myMonth = cal.get(Calendar.MONTH);
-        myDay = cal.get(Calendar.DAY_OF_MONTH);
+        int myYear = cal.get(Calendar.YEAR);
+        int myMonth = cal.get(Calendar.MONTH);
+        int myDay = cal.get(Calendar.DAY_OF_MONTH);
 
-        userViewHolder.userNameTextView.setText(currentUser.getName()+" "+(myYear-currentUser.getMyYear()));
+        userViewHolder.userNameTextView.setText(currentUser.getName()+" "+(myYear -currentUser.getMyYear()));
 
     }
 
@@ -71,12 +67,12 @@ public class ListOfDatingUserAdapter extends RecyclerView.Adapter<ListOfDatingUs
         return users.size();
     }
 
-    public static class UserViewHolder extends RecyclerView.ViewHolder{
+    static class UserViewHolder extends RecyclerView.ViewHolder{
 
-        public ImageView avatarImageView;
-        public TextView userNameTextView;
+        ImageView avatarImageView;
+        TextView userNameTextView;
 
-        public UserViewHolder(@NonNull View itemView, final OnUserClickListener listener) {
+         UserViewHolder(@NonNull View itemView, final OnUserClickListener listener) {
             super(itemView);
 
             avatarImageView = itemView.findViewById(R.id.avatarImageView);
