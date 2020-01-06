@@ -57,7 +57,7 @@ public class ProfileUsersPhotoAdapter extends RecyclerView.Adapter<ProfileUsersP
 
         public MyViewHolder(@NonNull View itemView, final OnPhotoClickListener listener) {
             super(itemView);
-            imagePhoto = itemView.findViewById(R.id.image_photo);
+            imagePhoto = itemView.findViewById(R.id.vipUserListItem);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
