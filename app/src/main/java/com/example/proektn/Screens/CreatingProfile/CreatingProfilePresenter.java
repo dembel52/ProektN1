@@ -33,18 +33,7 @@ public class CreatingProfilePresenter {
 
     }
 
-    public void loadData(String userId){
-        DocumentReference docRef = db.collection("Users").document(userId);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Users users = documentSnapshot.toObject(Users.class);
 
-                view.showData(users);
-            }
-        });
-
-    }
 
     public void saveImage(final StorageReference imageReference, final UploadTask uploadTask){
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {

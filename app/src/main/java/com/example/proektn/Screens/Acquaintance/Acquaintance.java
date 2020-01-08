@@ -7,6 +7,10 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -16,11 +20,15 @@ import com.example.proektn.Adapters.AcquaintanceVipUserAdapter;
 import com.example.proektn.Adapters.ListOfDatingUserAdapter;
 import com.example.proektn.Adapters.ProfileUsersPhotoAdapter;
 import com.example.proektn.R;
+import com.example.proektn.Screens.Accountancy.Accountancy;
+import com.example.proektn.Screens.CreatingProfile.CreatingProfile;
 import com.example.proektn.Screens.ListOfDating.ListOfDating;
+import com.example.proektn.Screens.Poisk.Poisk;
 import com.example.proektn.Screens.ProfileUser.ProfileUser;
 import com.example.proektn.Screens.ProfileUser.ProfileUserPresenter;
 import com.example.proektn.Screens.Users;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -34,6 +42,7 @@ public class Acquaintance extends AppCompatActivity implements AcquaintanceView{
     private RecyclerView userRecyclerView;
     private AcquaintanceAdapter userAdapter;
     private RecyclerView.LayoutManager userLayoutManager;
+    private ImageView menuPoisk;
 
     public ImageView avatarVipImage;
     private ArrayList<Users> usersVipList= new ArrayList();
@@ -50,13 +59,23 @@ public class Acquaintance extends AppCompatActivity implements AcquaintanceView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acquaintance);
 
+        menuPoisk = findViewById(R.id.imageViewMenuPoisk);
+
         presenter = new AcquaintancePresenter(this);
         avatarVipImage = findViewById(R.id.imageViewAvatar);
         presenter.loadData();
 
+        menuPoisk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Acquaintance.this, Poisk.class);
+                startActivity(intent);
+            }
+        });
+
         Query capitalCities = db.collection("Users");
 
-vipRecyclerView();
+        vipRecyclerView();
 
         capitalCities.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -134,4 +153,30 @@ vipRecyclerView();
         photoVipAdapter.notifyDataSetChanged();
 
     }
+
+
+    //  Меню
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.out:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(Acquaintance.this, Accountancy.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
+    }
+
+    //  Меню
 }

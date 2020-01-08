@@ -21,7 +21,7 @@ public class AccountancyPresenter {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Users users = documentSnapshot.toObject(Users.class);
 
-                view.showData(users);
+              //  view.showData(users);
             }
         });
     }

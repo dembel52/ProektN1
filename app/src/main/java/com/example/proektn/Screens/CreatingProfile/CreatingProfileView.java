@@ -7,7 +7,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public interface CreatingProfileView {
-    void showData(Users users);
+
     void showImage( Uri downloadUri);
 
 }

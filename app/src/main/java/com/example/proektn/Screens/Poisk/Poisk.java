@@ -74,10 +74,8 @@ public class Poisk extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Poisk.this, Acquaintance.class);
 
-                startActivity(intent);
-/*
+
                 final Calendar cal = Calendar.getInstance();
                 myYear = cal.get(Calendar.YEAR);
                 myMonth = cal.get(Calendar.MONTH);

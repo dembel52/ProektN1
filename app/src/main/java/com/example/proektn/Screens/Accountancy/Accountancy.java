@@ -10,11 +10,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.proektn.Screens.Acquaintance.Acquaintance;
 import com.example.proektn.Screens.CreatingProfile.CreatingProfile;
 import com.example.proektn.R;
 import com.example.proektn.Screens.Poisk.Poisk;
 import com.example.proektn.Screens.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
@@ -24,6 +26,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.TimeUnit;
 
@@ -47,8 +52,6 @@ public class Accountancy extends AppCompatActivity implements AccountancyView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accountancy);
 
-
-
         text1 = findViewById(R.id.editText1);
         text2 = findViewById(R.id.editText2);
         button = findViewById(R.id.button);
@@ -56,12 +59,9 @@ public class Accountancy extends AppCompatActivity implements AccountancyView{
         textV = findViewById(R.id.textNameUser);
         textV2 = findViewById(R.id.textView4);
 
-
         verificvation();
 
         auth = FirebaseAuth.getInstance();
-
-
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +93,7 @@ public class Accountancy extends AppCompatActivity implements AccountancyView{
 
 
         if(auth.getCurrentUser() != null){
-            Intent intent = new Intent(Accountancy.this, CreatingProfile.class);
+            Intent intent = new Intent(Accountancy.this, Acquaintance.class);
             intent.putExtra("id",auth.getUid());
 
             startActivity(intent);
@@ -107,6 +107,7 @@ public class Accountancy extends AppCompatActivity implements AccountancyView{
             startActivity(intent);
         }
     }
+
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -117,11 +118,32 @@ public class Accountancy extends AppCompatActivity implements AccountancyView{
                             //Log.d(TAG, "signInWithCredential:success");
                             Toast.makeText(Accountancy.this,"rrr",Toast.LENGTH_SHORT).show();
 
-                            FirebaseUser user = task.getResult().getUser();
+                            final FirebaseUser user = task.getResult().getUser();
 
-                            Intent intent = new Intent(Accountancy.this, CreatingProfile.class);
-                            intent.putExtra("id",user.getUid());
-                            startActivity(intent);
+                            if(user.getUid()!=null) {
+                                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                DocumentReference docRef = db.collection("Users").document(user.getUid());
+                                docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        Users users = documentSnapshot.toObject(Users.class);
+
+                                        if (users != null) {
+                                            Intent intent = new Intent(Accountancy.this, Acquaintance.class);
+                                            intent.putExtra("id", users.getId());
+                                            startActivity(intent);
+                                        } else {
+                                            Intent intent = new Intent(Accountancy.this, CreatingProfile.class);
+                                            intent.putExtra("id",user.getUid());
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                            }
+
+                            //Intent intent = new Intent(Accountancy.this, CreatingProfile.class);
+                            //intent.putExtra("id",user.getUid());
+                           // startActivity(intent);
                             // ...
                         } else {
                             Toast.makeText(Accountancy.this,"ttt",Toast.LENGTH_SHORT).show();

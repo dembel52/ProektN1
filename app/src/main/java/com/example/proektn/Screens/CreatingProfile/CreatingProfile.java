@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.proektn.Screens.Acquaintance.Acquaintance;
 import com.example.proektn.Screens.Poisk.Poisk;
 import com.example.proektn.R;
 import com.example.proektn.Screens.Accountancy.Accountancy;
@@ -83,7 +84,7 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
         Intent intent = getIntent();
         final String userId = intent.getStringExtra("id");
 
-        presenter.loadData(userId);
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -110,7 +111,7 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
                 if(userId != null) {
                     presenter.saveData(userId, users);
 
-                    Intent intent = new Intent(CreatingProfile.this, Poisk.class);
+                    Intent intent = new Intent(CreatingProfile.this, Acquaintance.class);
                     startActivity(intent);
                 }else{
                     Toast.makeText(CreatingProfile.this,"null",Toast.LENGTH_SHORT).show();
@@ -129,14 +130,7 @@ public class CreatingProfile extends  AppCompatActivity implements CreatingProfi
         });
 
     }
-    @Override
-    public void showData(Users users) {
-        if(users.getName()!=null){
-            Intent intent = new Intent(CreatingProfile.this, Poisk.class);
 
-            startActivity(intent);
-        }
-    }
 
     @Override
     public void showImage(Uri downloadUri) {
